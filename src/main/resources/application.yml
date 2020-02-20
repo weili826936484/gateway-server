@@ -1,0 +1,33 @@
+ip: 192.168.0.104
+#tomcat端口号
+server:
+  port: 9000
+  tomcat:
+    uri-encoding: UTF-8
+#应用名称
+spring:
+  application:
+    name: api-gateway
+eureka:
+  instance:
+    hostname: ${ip}
+    prefer-ip-address: true
+    instance-id: ${eureka.instance.hostname}:${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+#zuul配置信息
+zuul:
+  #配置eureka中服务发现的别名
+  routes:
+    order-server: /gateway/**
+  #此配置表示哪些服务不对外暴露
+  ignored-patterns:
+    /*-server/**,/*-service/**
+  #配置zuul的超时时间
+  host:
+    connect-timeout-millis: 5000
+
+ribbon:
+  ReadTimeout: 4000
+  ConnectTimeout: 4000
